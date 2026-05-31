@@ -35,7 +35,7 @@ php-lite/
 │  ├─ migrations/      ← numbered .sql files, run in order
 │  └─ seed.sql         ← demo data
 ├─ storage/
-│  ├─ logs/            ← app.log + mail.log
+│  ├─ logs/            ← app.log, mail.log, emails/ (local HTML email previews)
 │  └─ uploads/         ← uploaded files (outside public/, never web-served)
 └─ tests.php           ← `php tests.php`
 ```
@@ -76,7 +76,9 @@ You need **PHP 8.2+** and **MySQL** — both come with MAMP/WAMP. No Composer.
 `demo@example.com` / `password` · `admin@example.com` / `password`
 
 Password reset and email verification need **no email setup** locally — the
-messages (with links) are written to `storage/logs/mail.log`. Open it and copy the link.
+messages (with links) are written to `storage/logs/mail.log`. Open it and copy the
+link. The HTML version of each email is also saved to `storage/logs/emails/` — open
+it in a browser to preview how it looks.
 
 > **Important:** the web server's document root must be `public/`, never the
 > project root. Everything sensitive lives outside `public/`. If the page loads
@@ -153,6 +155,14 @@ That's the loop. No model class, no repository — the SQL lives in the method.
 - **Auth:** email/password (argon2id), rate-limited login, **remember me**,
   **email verification** (banner + resend; links go to `mail.log` locally),
   password reset.
+- **HTML email** — `send_mail($to, $subject, $text, $html)` sends a
+  multipart message (HTML + plain-text fallback); the verification and
+  password-reset emails are HTML (`views/layout/email.php` + `views/emails/`).
+  Locally the HTML body is also saved to `storage/logs/emails/` so you can open
+  the rendered email in a browser.
+- **Dark mode** — a sidebar toggle, persisted in a first-party cookie that the
+  server reads to set the theme on `<html>` (sticks across pages/refresh, no
+  flash). Defaults to the visitor's OS preference until they choose.
 - **Optional Google sign-in** — set `google_enabled => true` in `config.php`
   with your client id/secret (redirect URI `{app_url}/auth/google/callback`).
   Off by default; when off the button hides and the routes 404.
