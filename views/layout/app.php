@@ -6,10 +6,23 @@
  */
 ?>
 <!doctype html>
-<html lang="en">
+<?php /* An explicit theme choice is a first-party cookie, rendered here so it persists across pages/refresh with no JS. */ ?>
+<html lang="en"<?php $__theme = $_COOKIE['app-theme'] ?? ''; if ($__theme === 'dark' || $__theme === 'light') { echo ' data-bs-theme="' . $__theme . '"'; } ?>>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <?php /* No explicit choice yet? Honour the OS preference before first paint. */ ?>
+    <script>
+        (function () {
+            var el = document.documentElement;
+            if (el.getAttribute('data-bs-theme')) return; // explicit choice already rendered server-side
+            try {
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    el.setAttribute('data-bs-theme', 'dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <title><?= e($title ?? 'Dashboard') ?> · <?= e(config('app_name')) ?></title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"

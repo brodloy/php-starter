@@ -116,8 +116,16 @@ class AuthController
             ]);
 
             $link = url('/reset?token=' . $token . '&email=' . urlencode($email));
+            $html = view('emails/action', [
+                'title'     => 'Reset your password',
+                'preheader' => 'Choose a new password.',
+                'heading'   => 'Reset your password',
+                'intro'     => "Click below to choose a new password. This link is valid for 1 hour. If you didn't request it, you can safely ignore this email.",
+                'ctaUrl'    => $link,
+                'ctaText'   => 'Reset password',
+            ], 'email');
             send_mail($email, 'Reset your password',
-                "Click to choose a new password (valid 1 hour):\n\n{$link}\n");
+                "Click to choose a new password (valid 1 hour):\n\n{$link}\n", $html);
         }
 
         return redirect_with('/login', 'success',

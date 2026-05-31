@@ -2,16 +2,22 @@
 /** App sidebar. The active() helper highlights the current section. */
 $path = '/' . trim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/', '/');
 $active = fn (string $prefix): string => str_starts_with($path, $prefix) ? ' active' : '';
+// Monochrome inline icons (stroke = currentColor) so the nav stays consistent
+// and inherits the link colour, including the active state.
+$icon = fn (string $body): string =>
+    '<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"'
+    . ' stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    . $body . '</svg>';
 ?>
 <aside class="app-sidebar">
     <a href="<?= e(url('/dashboard')) ?>" class="brand text-decoration-none"><?= e(config('app_name')) ?></a>
     <nav>
-        <a class="nav-item-link<?= $active('/dashboard') ?>" href="<?= e(url('/dashboard')) ?>">&#9632; Dashboard</a>
-        <a class="nav-item-link<?= $active('/examples') ?>" href="<?= e(url('/examples')) ?>">&#9670; Examples</a>
-        <a class="nav-item-link<?= $active('/uploads') ?>" href="<?= e(url('/uploads')) ?>">&#9737; Files</a>
-        <a class="nav-item-link<?= $active('/settings') ?>" href="<?= e(url('/settings')) ?>">&#9881; Settings</a>
+        <a class="nav-item-link<?= $active('/dashboard') ?>" href="<?= e(url('/dashboard')) ?>"><?= $icon('<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>') ?>Dashboard</a>
+        <a class="nav-item-link<?= $active('/examples') ?>" href="<?= e(url('/examples')) ?>"><?= $icon('<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>') ?>Examples</a>
+        <a class="nav-item-link<?= $active('/uploads') ?>" href="<?= e(url('/uploads')) ?>"><?= $icon('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>') ?>Files</a>
+        <a class="nav-item-link<?= $active('/settings') ?>" href="<?= e(url('/settings')) ?>"><?= $icon('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>') ?>Settings</a>
         <?php if (is_admin()): ?>
-            <a class="nav-item-link<?= $active('/admin') ?>" href="<?= e(url('/admin/users')) ?>">&#9889; Admin</a>
+            <a class="nav-item-link<?= $active('/admin') ?>" href="<?= e(url('/admin/users')) ?>"><?= $icon('<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>') ?>Admin</a>
         <?php endif; ?>
     </nav>
     <div class="sidebar-foot">
@@ -19,6 +25,10 @@ $active = fn (string $prefix): string => str_starts_with($path, $prefix) ? ' act
             <div class="fw-medium text-truncate"><?= e(current_user()['Name'] ?? '') ?></div>
             <div class="text-faint text-truncate"><?= e(current_user()['Email'] ?? '') ?></div>
         </div>
+        <button type="button" class="btn btn-outline-secondary btn-sm w-100 mb-2 theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+            <span class="theme-when-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Dark mode</span>
+            <span class="theme-when-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>Light mode</span>
+        </button>
         <form method="post" action="<?= e(url('/logout')) ?>">
             <?= csrf_field() ?>
             <button type="submit" class="btn btn-outline-secondary btn-sm w-100">Sign out</button>

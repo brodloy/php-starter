@@ -45,3 +45,19 @@ document.addEventListener('submit', function (event) {
         }
     });
 })();
+
+/* ----------------------------------------------------------------------------
+   Dark-mode toggle. Persists the choice in a first-party cookie that the server
+   reads to set data-bs-theme on <html> (see views/layout/app.php), so it sticks
+   across page changes and refreshes. The OS preference is the pre-paint default
+   until the user makes an explicit choice.
+   -------------------------------------------------------------------------- */
+(function () {
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('[data-theme-toggle]')) return;
+        var isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        var next = isDark ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-bs-theme', next);
+        document.cookie = 'app-theme=' + next + ';path=/;max-age=31536000;samesite=lax';
+    });
+})();

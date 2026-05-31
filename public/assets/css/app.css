@@ -1,34 +1,42 @@
 /* ============================================================================
-   APP.CSS — a thin "Helix" layer on top of Bootstrap 5.3
+   APP.CSS — a SaaS "Signal" layer on top of Bootstrap 5.3
    ----------------------------------------------------------------------------
-   Philosophy: let Bootstrap handle layout/grid/utilities, and use this file to
-   re-skin it into the "Helix / Graphite" look — warm paper, graphite text, a
-   muted clay accent, hairline borders, square geometry, a precise grotesk for
-   everything and a monospace for small labels. Everything is driven by the CSS
-   variables in :root, so you can rebrand the whole app by editing a dozen lines
-   (swap --accent + --accent-text for a different signal colour, for instance).
+   Philosophy: let Bootstrap handle layout/grid/utilities; this file re-skins it
+   into a clean, modern product look — cool slate neutrals, a confident indigo
+   accent, soft layered shadows, rounded geometry, a humanist grotesk for UI and
+   a monospace for technical labels. Everything is driven by the :root variables,
+   so the whole app rebrands by editing a dozen lines (swap --accent for a
+   different signal colour). Status colours (healthy/warning/critical/unknown)
+   are first-class here because this app is a monitoring dashboard.
    ========================================================================== */
 
 :root {
-    /* Graphite palette (warm paper + graphite ink) */
-    --bg:            #fffefb;   /* panels / cards */
-    --bg-tint:       #faf9f5;   /* sidebar / inputs / subtle panels */
-    --bg-page:       #f6f5f2;   /* warm paper page background */
-    --text:          #1a1916;   /* primary text */
-    --text-muted:    #615d56;   /* secondary text */
-    --text-faint:    #9a958c;   /* hints, timestamps */
-    --border:        #e8e5df;   /* hairline borders */
-    --border-strong: #d8d4cb;
+    /* Cool slate palette (crisp white panels on a soft slate page) */
+    --bg:            #ffffff;   /* panels / cards */
+    --bg-tint:       #f8fafc;   /* sidebar / inputs / subtle panels */
+    --bg-page:       #f1f5f9;   /* page background */
+    --surface-blur:  var(--bg);   /* opaque topbar — content must not show through when scrolling under it */
+    --text:          #0f172a;   /* primary text (slate-900) */
+    --text-muted:    #475569;   /* secondary text (slate-600) */
+    --text-faint:    #94a3b8;   /* hints, timestamps (slate-400) */
+    --border:        #e2e8f0;   /* hairline borders (slate-200) */
+    --border-strong: #cbd5e1;   /* (slate-300) */
 
-    /* Clay — the one muted accent (links, focus, primary buttons, ticks) */
-    --accent:        #bd6244;
-    --accent-hover:  #a44e31;
-    --accent-text:   #a44e31;   /* slightly deeper, for accent text on paper */
-    --on-accent:     #ffffff;   /* text on a filled clay button */
-    --accent-grid:   rgba(189, 98, 68, 0.26);  /* faint hero grid tint */
+    /* Indigo — the primary accent (links, focus, primary buttons) */
+    --accent:        #4f46e5;   /* indigo-600 */
+    --accent-hover:  #4338ca;   /* indigo-700 */
+    --accent-text:   #4338ca;   /* accent text on white, a touch deeper */
+    --on-accent:     #ffffff;
+    --accent-soft:   rgba(79, 70, 229, 0.08);
+    --accent-ring:   rgba(79, 70, 229, 0.18);
+    --accent-grid:   rgba(79, 70, 229, 0.14);  /* faint hero grid tint */
 
-    --danger:  #c0392b;
-    --success: #4f7d5e;
+    /* Status system — drives the whole monitoring dashboard */
+    --ok:           #16a34a;   --ok-soft:   rgba(22, 163, 74, 0.10);
+    --warn:         #d97706;   --warn-soft: rgba(217, 119, 6, 0.12);
+    --danger:       #dc2626;   --danger-soft: rgba(220, 38, 38, 0.10);
+    --neutral:      #64748b;   --neutral-soft: rgba(100, 116, 139, 0.10);
+    --success:      var(--ok);
 
     /* Map Bootstrap's variables onto our palette so components inherit it */
     --bs-body-bg: var(--bg-page);
@@ -38,14 +46,17 @@
     --bs-link-color: var(--accent-text);
     --bs-link-hover-color: var(--accent-hover);
 
-    /* Square-ish geometry */
-    --radius:    7px;
-    --radius-sm: 6px;
-    --radius-lg: 9px;
-    --shadow-sm: 0 1px 2px rgba(26, 25, 22, 0.04), 0 1px 3px rgba(26, 25, 22, 0.05);
-    --shadow-md: 0 8px 24px -12px rgba(26, 25, 22, 0.28);
+    /* Rounded, modern geometry */
+    --radius:    10px;
+    --radius-sm: 8px;
+    --radius-lg: 14px;
+    --radius-pill: 999px;
+    --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 2px 6px -2px rgba(15, 23, 42, 0.08);
+    --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.10), 0 12px 28px -8px rgba(15, 23, 42, 0.14);
+    --shadow-lg: 0 24px 48px -16px rgba(15, 23, 42, 0.22);
 
-    /* Type: a precise grotesk for everything, monospace for small labels */
+    /* Type: a humanist grotesk for UI, monospace for technical labels */
     --font-sans: "Schibsted Grotesk", ui-sans-serif, -apple-system,
         BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
@@ -65,54 +76,61 @@ body {
     text-rendering: optimizeLegibility;
 }
 
-/* Headings use the same grotesk, but bold and tightly tracked */
+/* Headings: same grotesk, heavier and tightly tracked */
 h1, h2, h3, .display-tight {
     font-family: var(--font-sans);
     font-weight: 700;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     color: var(--text);
 }
-h1 { font-size: 2.2rem; line-height: 1.15; }
-h2 { font-size: 1.6rem; }
-h3 { font-size: 1.25rem; }
+h1 { font-size: 2.1rem; line-height: 1.15; font-weight: 800; }
+h2 { font-size: 1.55rem; }
+h3 { font-size: 1.2rem; }
 
 a { text-decoration: none; color: var(--accent-text); }
 a:hover { text-decoration: underline; }
+/* Anchors styled as buttons should never underline — match real <button>s. */
+.btn:hover, .btn:focus { text-decoration: none; }
+
+code { color: var(--accent-text); background: var(--accent-soft);
+    padding: 0.08em 0.4em; border-radius: var(--radius-sm); font-size: 0.88em; }
 
 .text-muted-2 { color: var(--text-muted) !important; }
 .text-faint   { color: var(--text-faint) !important; }
 
-/* A small monospace, uppercase "engineering" label — used for the hero eyebrow */
+/* A small monospace, uppercase technical label — hero eyebrow / section kicker */
 .eyebrow {
     display: inline-block;
     font-family: var(--font-mono);
     font-size: 0.72rem;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--accent-text);
     border: 1px solid var(--border);
     background: var(--bg);
-    padding: 0.32rem 0.65rem;
-    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-xs);
+    padding: 0.34rem 0.7rem;
+    border-radius: var(--radius-pill);
     margin-bottom: 1.1rem;
 }
-.eyebrow::before { content: "// "; }
+.eyebrow::before { content: "● "; color: var(--accent); font-size: 0.7em; vertical-align: middle; }
 
 /* ---- Buttons ------------------------------------------------------------- */
 .btn {
     border-radius: var(--radius);
     font-weight: 600;
-    padding: 0.55rem 1rem;
-    transition: background-color 0.12s ease, border-color 0.12s ease,
-        transform 0.1s ease, box-shadow 0.12s ease;
+    padding: 0.58rem 1.05rem;
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+        transform 0.12s ease, box-shadow 0.15s ease, color 0.15s ease;
 }
 
-/* Primary = the clay accent, filled */
+/* Primary = the indigo accent, filled, with a soft lift */
 .btn-primary,
 .btn-accent {
     background: var(--accent);
     border-color: var(--accent);
     color: var(--on-accent);
+    box-shadow: var(--shadow-xs);
 }
 .btn-primary:hover, .btn-primary:focus,
 .btn-accent:hover,  .btn-accent:focus {
@@ -120,6 +138,7 @@ a:hover { text-decoration: underline; }
     border-color: var(--accent-hover);
     color: var(--on-accent);
     transform: translateY(-1px);
+    box-shadow: 0 6px 16px -6px var(--accent-ring);
 }
 
 /* Secondary = a quiet bordered "ghost" button */
@@ -130,34 +149,43 @@ a:hover { text-decoration: underline; }
 }
 .btn-outline-secondary:hover {
     background: var(--bg-tint);
-    border-color: var(--text);
-    color: var(--text);
+    border-color: var(--accent);
+    color: var(--accent-text);
 }
 
+/* Destructive */
+.btn-outline-danger { border-color: var(--border-strong); color: var(--danger); background: var(--bg); }
+.btn-outline-danger:hover { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+
 .btn-link { color: var(--accent-text); }
+.btn-sm { padding: 0.4rem 0.75rem; font-size: 0.85rem; }
 
 /* ---- Forms --------------------------------------------------------------- */
 .form-control, .form-select {
     border: 1px solid var(--border-strong);
     border-radius: var(--radius);
-    padding: 0.62rem 0.8rem;
-    background: var(--bg-tint);
+    padding: 0.62rem 0.85rem;
+    background: var(--bg);
     color: var(--text);
-    font-family: var(--font-mono);
-    font-size: 0.95rem;
+    font-family: var(--font-sans);
+    font-size: 0.97rem;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
+.form-control::placeholder { color: var(--text-faint); }
 .form-control:focus, .form-select:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(189, 98, 68, 0.16);
+    box-shadow: 0 0 0 4px var(--accent-ring);
     background: var(--bg);
 }
+/* Monospace stays for fields that hold technical values (hosts, tokens) */
+.form-control.mono, input[type="url"].form-control, input[name="host"].form-control { font-family: var(--font-mono); }
 
-/* Labels are small, uppercase, monospace — the "Helix" signature */
+/* Labels: small, uppercase, monospace — the signature */
 .form-label {
     font-family: var(--font-mono);
     font-weight: 500;
     font-size: 0.72rem;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-muted);
     margin-bottom: 0.4rem;
@@ -169,188 +197,317 @@ a:hover { text-decoration: underline; }
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    box-shadow: none;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
 }
 .card-body { padding: 1.5rem; }
+
+/* Interactive cards lift on hover */
+.card.is-interactive:hover,
+.feature-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+    border-color: var(--border-strong);
+}
 
 .panel {
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
 }
 
-/* Feature cards (landing) get a small clay "tick" at the top-left */
-.feature-card { position: relative; }
+/* Feature cards (landing) get a small accent tick at the top-left */
+.feature-card { position: relative; overflow: hidden; }
 .feature-card::before {
     content: "";
     position: absolute;
-    left: 1.5rem;
-    top: 0;
-    width: 26px;
-    height: 2px;
-    background: var(--accent);
+    left: 0; top: 0;
+    width: 100%; height: 3px;
+    background: linear-gradient(90deg, var(--accent), transparent 70%);
+}
+
+/* Stat cards (dashboard KPIs) */
+.stat-card .stat-value { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.stat-card .stat-label {
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-faint);
 }
 
 /* ---- Public top navigation ----------------------------------------------- */
 .site-nav {
-    background: rgba(246, 245, 242, 0.82);
-    backdrop-filter: saturate(180%) blur(10px);
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: saturate(180%) blur(12px);
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
     z-index: 100;
 }
 .site-nav .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-family: var(--font-mono);
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.02rem;
+    font-weight: 700;
     color: var(--text);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
+}
+
+/* The lock mark used in both the public nav and the app sidebar */
+.brand-mark {
+    flex-shrink: 0;
+    width: 1.05em;
+    height: 1.05em;
+    color: var(--accent);
 }
 .site-nav .nav-link { color: var(--text-muted); font-weight: 500; }
-.site-nav .nav-link:hover { color: var(--text); text-decoration: none; }
+.site-nav .nav-link:hover { color: var(--accent-text); text-decoration: none; }
 
 /* ---- Hero (landing) ------------------------------------------------------ */
 .hero {
-    padding: 6rem 0 4rem;
+    padding: 6.5rem 0 4.5rem;
     text-align: center;
     position: relative;
+    overflow: hidden;
 }
 .hero > .container { position: relative; z-index: 1; }
 .hero h1 {
-    font-size: clamp(2.6rem, 6vw, 4rem);
-    line-height: 1.0;
+    font-size: clamp(2.6rem, 6vw, 4.1rem);
+    line-height: 1.04;
     margin-bottom: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.035em;
 }
-.hero .lead { color: var(--text-muted); font-size: 1.16rem; max-width: 38rem; margin: 0 auto 2rem; }
+.hero .lead { color: var(--text-muted); font-size: 1.18rem; max-width: 40rem; margin: 0 auto 2rem; }
 
-/* A faint engineering grid behind the hero — square lines, fading at the edges */
+/* A faint engineering grid + a soft indigo glow behind the hero */
 .dot-grid::after {
     content: "";
     position: absolute;
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 0.7;
     background-image:
         linear-gradient(var(--accent-grid) 1px, transparent 1px),
         linear-gradient(90deg, var(--accent-grid) 1px, transparent 1px);
-    background-size: 38px 38px;
-    -webkit-mask-image: radial-gradient(70% 60% at 50% 35%, #000, transparent 75%);
-            mask-image: radial-gradient(70% 60% at 50% 35%, #000, transparent 75%);
+    background-size: 40px 40px;
+    -webkit-mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 75%);
+            mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 75%);
+}
+.dot-grid::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: -10%;
+    width: 720px; height: 420px;
+    transform: translateX(-50%);
+    background: radial-gradient(closest-side, var(--accent-soft), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
 }
 
 /* ---- App shell (sidebar + content) --------------------------------------- */
-.app-shell { display: flex; min-height: 100vh; }
+/* The shell fills the viewport and hides overflow; the topbar is a fixed-height
+   header and .app-content is the only scrolling region — so page content scrolls
+   BELOW the topbar, never under it. */
+.app-shell { display: flex; height: 100vh; height: 100dvh; overflow: hidden; }
 
 .app-sidebar {
-    width: 240px;
+    width: 248px;
     flex-shrink: 0;
     background: var(--bg);
     border-right: 1px solid var(--border);
-    padding: 1rem 0.75rem;
+    padding: 1.1rem 0.8rem;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
 }
 .app-sidebar .brand {
     font-family: var(--font-mono);
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--text);
-    padding: 0.5rem 0.6rem 1rem;
+    letter-spacing: -0.02em;
+    padding: 0.4rem 0.7rem 1.1rem;
+    display: flex; align-items: center; gap: 0.5rem;
 }
 .app-sidebar .nav-item-link {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.45rem 0.6rem;
-    margin-bottom: 2px;
+    gap: 0.65rem;
+    padding: 0.55rem 0.7rem;
+    margin-bottom: 3px;
     border-radius: var(--radius);
-    border-left: 2px solid transparent;
     color: var(--text-muted);
     font-size: 0.93rem;
     font-weight: 500;
+    transition: background 0.14s ease, color 0.14s ease;
 }
+.app-sidebar .nav-icon { flex-shrink: 0; width: 18px; height: 18px; }
 .app-sidebar .nav-item-link:hover { background: var(--bg-tint); color: var(--text); text-decoration: none; }
 .app-sidebar .nav-item-link.active {
-    background: rgba(189, 98, 68, 0.10);
-    border-left-color: var(--accent);
-    color: var(--accent-text);
+    background: var(--accent);
+    color: var(--on-accent);
+    box-shadow: var(--shadow-xs);
 }
-.app-sidebar .sidebar-foot { margin-top: auto; border-top: 1px solid var(--border); padding-top: 0.75rem; }
+.app-sidebar .sidebar-foot { margin-top: auto; border-top: 1px solid var(--border); padding-top: 0.85rem; }
 
-.app-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.app-main { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
 .app-topbar {
-    height: 56px;
+    height: 60px;
+    flex-shrink: 0;
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1.5rem;
-    background: var(--bg);
+    padding: 0 1.75rem;
+    background: var(--surface-blur);
 }
-.app-content { padding: 2rem; max-width: 920px; width: 100%; }
+.app-content { padding: 2rem; width: 100%; flex: 1; min-height: 0; overflow-y: auto; }
 
 /* ---- Auth card ----------------------------------------------------------- */
-.auth-wrap { min-height: calc(100vh - 60px); display: grid; place-items: center; padding: 2rem 1rem; }
-.auth-card { width: 100%; max-width: 400px; }
-.auth-card h1 { font-size: 1.7rem; text-align: center; margin-bottom: 0.35rem; }
-.auth-sub { text-align: center; color: var(--text-muted); margin-bottom: 1.75rem; }
+.auth-wrap {
+    min-height: 78vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem 4rem;
+}
+.auth-card { width: 100%; max-width: 430px; box-shadow: none; text-align: center; }
+.auth-card .card { border-radius: var(--radius-lg); box-shadow: var(--shadow-md); text-align: left; }
+.auth-card .card-body { padding: 2rem 1.9rem; }
+.auth-card h1 { font-size: 1.85rem; text-align: center; margin-bottom: 0.4rem; }
+.auth-sub { text-align: center; color: var(--text-muted); margin-bottom: 1.9rem; }
+/* Brand lockup above the card so the page doesn't feel empty */
+.auth-brand {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--font-mono); font-weight: 700; font-size: 1.15rem;
+    color: var(--text); letter-spacing: -0.02em; margin-bottom: 1.5rem;
+    text-decoration: none;
+}
+.auth-brand svg { width: 1.15em; height: 1.15em; color: var(--accent); }
 .divider {
     display: flex; align-items: center; gap: 0.75rem;
     color: var(--text-faint); margin: 1.25rem 0;
-    font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.1em;
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
 }
 .divider::before, .divider::after { content: ""; height: 1px; background: var(--border); flex: 1; }
 
-.btn-google {
-    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-    width: 100%; background: var(--bg-tint); border: 1px solid var(--border-strong); color: var(--text);
+.btn-google, .btn-github {
+    display: flex; align-items: center; justify-content: center; gap: 0.55rem;
+    width: 100%; background: var(--bg); border: 1px solid var(--border-strong); color: var(--text);
     font-family: var(--font-sans); font-weight: 600;
 }
-.btn-google:hover { background: var(--bg); border-color: var(--text); color: var(--text); }
+.btn-google:hover, .btn-github:hover { background: var(--bg-tint); border-color: var(--accent); color: var(--accent-text); }
 
 /* ---- Flash messages ------------------------------------------------------ */
 .flash {
     border: 1px solid var(--border);
     border-left-width: 3px;
     border-radius: var(--radius);
-    padding: 0.75rem 1rem;
+    padding: 0.8rem 1.05rem;
     margin-bottom: 1rem;
     font-size: 0.94rem;
     background: var(--bg);
+    box-shadow: var(--shadow-xs);
 }
-.flash-success { border-left-color: var(--success); }
-.flash-error   { border-left-color: var(--danger); }
-.flash-info    { border-left-color: var(--accent); }
+.flash-success { border-left-color: var(--ok); background: var(--ok-soft); }
+.flash-error   { border-left-color: var(--danger); background: var(--danger-soft); }
+.flash-info    { border-left-color: var(--accent); background: var(--accent-soft); }
 
 /* ---- Status badges ------------------------------------------------------- */
 .badge-soft {
+    display: inline-flex; align-items: center; gap: 0.4em;
     font-family: var(--font-mono);
     font-weight: 500;
     font-size: 0.68rem;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    padding: 0.26em 0.6em;
-    border-radius: var(--radius-sm);
+    padding: 0.3em 0.65em;
+    border-radius: var(--radius-pill);
     border: 1px solid var(--border);
     color: var(--text-muted);
     background: var(--bg-tint);
 }
-.badge-soft.is-active {
-    color: var(--accent-text);
-    border-color: rgba(189, 98, 68, 0.35);
-    background: rgba(189, 98, 68, 0.08);
+/* A leading dot makes status legible at a glance */
+.badge-soft::before {
+    content: ""; width: 0.5em; height: 0.5em; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
 }
+.badge-soft.is-active   { color: var(--accent-text); border-color: rgba(79,70,229,0.30); background: var(--accent-soft); }
 .badge-soft.is-archived { color: var(--text-faint); }
+/* Monitoring statuses */
+.badge-soft.is-healthy  { color: var(--ok);      border-color: rgba(22,163,74,0.30);  background: var(--ok-soft); }
+.badge-soft.is-warning  { color: var(--warn);    border-color: rgba(217,119,6,0.30);  background: var(--warn-soft); }
+.badge-soft.is-critical { color: var(--danger);  border-color: rgba(220,38,38,0.30);  background: var(--danger-soft); }
+.badge-soft.is-unknown  { color: var(--neutral); border-color: rgba(100,116,139,0.30);background: var(--neutral-soft); }
+.badge-soft.is-expired  { color: var(--danger);  border-color: rgba(220,38,38,0.45);  background: var(--danger-soft); font-weight: 600; }
+.badge-soft.is-failed   { color: var(--danger);  border-color: rgba(220,38,38,0.30);  background: var(--danger-soft); }
 
 /* ---- Tables / lists ------------------------------------------------------ */
+/* Let cells show the white card/table-card behind them. Bootstrap defaults
+   --bs-table-bg to --bs-body-bg (our grey page colour), which made tables read
+   grey against the white cards — transparent fixes that and keeps hover working. */
+.table { color: var(--text); margin: 0; --bs-table-bg: transparent; }
+.table thead th {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-weight: 500;
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+}
+.table tbody td { padding: 1rem 0.9rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.table tbody tr:last-child td { border-bottom: 0; }
+.table tbody tr { transition: background 0.12s ease; }
+.table tbody tr:hover { background: var(--bg-tint); }
+.table .host { font-family: var(--font-mono); font-weight: 500; color: var(--text); }
+.table .days-left { font-family: var(--font-mono); font-weight: 600; }
+.favicon { border-radius: 3px; flex: none; }
+
+/* Compact square icon buttons (per-row actions: scan / edit / delete) */
+.btn-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; padding: 0;
+    border: 1px solid var(--border-strong); border-radius: var(--radius);
+    background: var(--bg); color: var(--text-muted);
+    cursor: pointer; transition: background 0.14s ease, color 0.14s ease, border-color 0.14s ease;
+}
+.btn-icon:hover { background: var(--bg-tint); color: var(--text); border-color: var(--accent); text-decoration: none; }
+.btn-icon svg { width: 16px; height: 16px; }
+.btn-icon[disabled] { opacity: 0.55; cursor: default; }
+.btn-icon-danger:hover { color: var(--danger); border-color: var(--danger); }
+.btn-icon.is-busy svg { animation: cy-spin 0.7s linear infinite; }
+@keyframes cy-spin { to { transform: rotate(360deg); } }
+
+/* Wrap a table in .table-card for a framed, elevated look. Tables that are
+   wider than the card scroll horizontally inside it (rather than clipping). */
+.table-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm); overflow-x: auto; overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; }
+.table-card .table { min-width: 640px; }
+.table-card .table td, .table-card .table th { white-space: nowrap; }
+/* let the detail/long columns wrap instead of forcing the table ever-wider */
+.table-card .table td.wrap, .table-card .table th.wrap { white-space: normal; }
+
+/* The host column is the elastic one: it may wrap so the table can shrink to
+   fit its container instead of forcing a horizontal scrollbar. */
+.table-card .table td.col-host, .table-card .table th.col-host { white-space: normal; min-width: 150px; }
+/* As the viewport narrows, drop the least-critical columns rather than scroll. */
+@media (max-width: 1180px) { .col-checked { display: none; } }
+@media (max-width: 940px)  { .col-type    { display: none; } }
+
 .list-row {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0.85rem 1.05rem; border: 1px solid var(--border); border-radius: var(--radius);
-    margin-bottom: 0.55rem; background: var(--bg);
+    padding: 0.9rem 1.1rem; border: 1px solid var(--border); border-radius: var(--radius);
+    margin-bottom: 0.6rem; background: var(--bg); box-shadow: var(--shadow-xs);
+    transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
 }
-.list-row:hover { border-color: var(--border-strong); }
+.list-row:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
 .list-row .title { font-weight: 600; color: var(--text); }
 .list-row small, .list-row .text-faint { font-family: var(--font-mono); font-size: 0.74rem; }
 
@@ -365,7 +522,6 @@ a:hover { text-decoration: underline; }
 }
 
 /* ---- Mobile nav drawer --------------------------------------------------- */
-/* The hamburger lives in the top bar and only appears on small screens. */
 .app-nav-toggle {
     display: none;
     border: 0;
@@ -382,26 +538,300 @@ a:hover { text-decoration: underline; }
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(26, 25, 22, 0.35);
+    background: rgba(15, 23, 42, 0.40);
+    backdrop-filter: blur(2px);
     z-index: 200;
 }
 
-/* ---- Small responsive nicety --------------------------------------------- */
+/* ---- Responsive ---------------------------------------------------------- */
 @media (max-width: 768px) {
     .app-content { padding: 1.25rem; }
-
-    /* Instead of disappearing, the sidebar becomes a drawer that slides in. */
     .app-sidebar {
         position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
+        top: 0; left: 0; bottom: 0;
         z-index: 210;
         transform: translateX(-100%);
         transition: transform 0.2s ease;
-        box-shadow: var(--shadow-md);
+        box-shadow: var(--shadow-lg);
     }
     .app-shell.nav-open .app-sidebar { transform: none; }
     .app-shell.nav-open .app-nav-backdrop { display: block; }
     .app-nav-toggle { display: inline-flex; align-items: center; }
+}
+
+/* ============================================================================
+   LANDING PAGE — a richer, product-led marketing surface. Self-contained;
+   uses the same tokens as the app so the two feel like one product.
+   ========================================================================== */
+
+/* Staggered load animation (disabled for reduced-motion below) */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes softPulse { 0%,100% { box-shadow: 0 0 0 0 var(--danger-soft); } 50% { box-shadow: 0 0 0 6px transparent; } }
+
+.reveal { opacity: 0; animation: fadeUp 0.7s cubic-bezier(.2,.7,.2,1) forwards; }
+.reveal.d1 { animation-delay: 0.08s; }
+.reveal.d2 { animation-delay: 0.16s; }
+.reveal.d3 { animation-delay: 0.24s; }
+.reveal.d4 { animation-delay: 0.32s; }
+
+/* ---- Hero: minimal, centered & stacked ----------------------------------- */
+.landing-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 6.5rem 1.5rem 5rem;
+    text-align: center;
+}
+.hero-inner { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+.hero-inner h1 {
+    font-size: clamp(2.9rem, 6vw, 4.3rem);
+    line-height: 1.0;
+    letter-spacing: -0.045em;
+    font-weight: 800;
+    margin-bottom: 1.4rem;
+}
+.hero-inner h1 .accent { color: var(--accent); }
+.hero-inner .lead { color: var(--text-muted); font-size: 1.22rem; max-width: 32rem; margin: 0 auto 2.25rem; }
+.hero-cta { display: flex; justify-content: center; gap: 0.75rem; }
+.hero-cta .btn { padding: 0.8rem 2rem; font-size: 1.05rem; }
+.hero-secondary {
+    display: inline-block; margin-top: 1rem;
+    font-size: 0.95rem; color: var(--text-muted); font-weight: 500;
+}
+.hero-secondary:hover { color: var(--accent-text); text-decoration: none; }
+
+/* The product mock, centered below the copy */
+.hero-mock { position: relative; z-index: 1; max-width: 680px; margin: 4rem auto 0; }
+
+/* A slim row of trust ticks beneath the mock */
+.hero-ticks {
+    position: relative; z-index: 1;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.5rem;
+    margin: 2.25rem auto 0;
+    font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-faint);
+}
+.hero-ticks span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.hero-ticks span::before { content: "✓"; color: var(--ok); font-weight: 700; }
+
+/* Hero background: a soft indigo glow behind the headline */
+.landing-hero::before {
+    content: ""; position: absolute; left: 50%; top: -5%;
+    width: 820px; height: 520px; transform: translateX(-50%);
+    z-index: 0; pointer-events: none;
+    background: radial-gradient(closest-side, var(--accent-soft), transparent 70%);
+}
+.landing-hero::after {
+    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.55;
+    background-image:
+        linear-gradient(var(--accent-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--accent-grid) 1px, transparent 1px);
+    background-size: 42px 42px;
+    -webkit-mask-image: radial-gradient(65% 55% at 50% 22%, #000, transparent 75%);
+            mask-image: radial-gradient(65% 55% at 50% 22%, #000, transparent 75%);
+}
+
+/* ---- Browser-framed product mock ----------------------------------------- */
+.browser-frame {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+}
+.browser-bar {
+    display: flex; align-items: center; gap: 0.45rem;
+    padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--border); background: var(--bg-tint);
+}
+.browser-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border-strong); }
+.browser-url {
+    margin-left: 0.6rem; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-faint);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-pill);
+    padding: 0.2rem 0.7rem; flex: 1;
+}
+.mini-dash { padding: 1rem 1.1rem 1.2rem; }
+.mini-dash .mini-title { font-weight: 700; font-size: 0.98rem; margin-bottom: 0.85rem; letter-spacing: -0.01em; }
+.mini-row {
+    display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 0.75rem;
+    padding: 0.7rem 0.2rem; border-bottom: 1px solid var(--border);
+}
+.mini-row:last-child { border-bottom: 0; }
+.mini-host { font-family: var(--font-mono); font-size: 0.83rem; font-weight: 500; }
+.mini-days { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; }
+.mini-row.is-crit { background: var(--danger-soft); border-radius: var(--radius-sm); padding-inline: 0.55rem;
+    animation: softPulse 2.4s ease-in-out infinite; }
+
+/* ---- Trust strip --------------------------------------------------------- */
+.trust-strip { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--bg); }
+.trust-strip .container { max-width: 1000px; padding: 1.5rem 1rem; text-align: center; }
+.trust-strip .trust-label {
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-faint); margin-bottom: 0.9rem;
+}
+.trust-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 0.6rem; }
+.trust-chip {
+    font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-muted);
+    border: 1px solid var(--border); border-radius: var(--radius-pill); padding: 0.3rem 0.85rem; background: var(--bg-tint);
+}
+
+/* ---- Section scaffolding ------------------------------------------------- */
+.section { padding: 4.5rem 0; }
+.section .container { max-width: 1000px; }
+.section-head { text-align: center; max-width: 40rem; margin: 0 auto 2.75rem; }
+.section-head h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); letter-spacing: -0.03em; margin-bottom: 0.6rem; }
+.section-head p { color: var(--text-muted); font-size: 1.08rem; margin: 0; }
+
+/* Steps */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; counter-reset: step; }
+.step { position: relative; }
+.step-icon {
+    width: 46px; height: 46px; border-radius: var(--radius); display: grid; place-items: center;
+    background: var(--accent-soft); color: var(--accent); margin-bottom: 1rem;
+}
+.step-icon svg { width: 22px; height: 22px; }
+.step h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+.step h3 .num { font-family: var(--font-mono); color: var(--text-faint); font-weight: 600; margin-right: 0.4rem; }
+.step p { color: var(--text-muted); margin: 0; font-size: 0.96rem; }
+
+/* Feature grid */
+.feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+.feat-icon { width: 40px; height: 40px; border-radius: var(--radius); display: grid; place-items: center;
+    background: var(--accent-soft); color: var(--accent); margin-bottom: 0.9rem; }
+.feat-icon svg { width: 20px; height: 20px; }
+
+/* ---- Terminal "real check" block ----------------------------------------- */
+.terminal {
+    background: #0f172a; border: 1px solid #1e293b; border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg); overflow: hidden; max-width: 640px; margin: 0 auto;
+}
+.term-bar { display: flex; align-items: center; gap: 0.45rem; padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid #1e293b; }
+.term-bar .browser-dot { background: #334155; }
+.term-bar .term-name { margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.74rem; color: #64748b; }
+.term-body { padding: 1.1rem 1.25rem 1.3rem; font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.85; }
+.term-body .prompt { color: #818cf8; }
+.term-body .cmd { color: #e2e8f0; }
+.term-body .muted { color: #64748b; }
+.term-body .key { color: #94a3b8; display: inline-block; width: 5.5rem; }
+.term-body .val { color: #e2e8f0; }
+.term-body .ok { color: #4ade80; }
+.term-body .warn { color: #fbbf24; }
+
+/* ---- Closing CTA band ---------------------------------------------------- */
+.cta-band { background: var(--accent); color: var(--on-accent); border-radius: var(--radius-lg);
+    text-align: center; padding: 3.25rem 2rem; box-shadow: var(--shadow-md); position: relative; overflow: hidden; }
+.cta-band h2 { color: var(--on-accent); font-size: clamp(1.8rem, 3vw, 2.4rem); letter-spacing: -0.03em; margin-bottom: 0.6rem; }
+.cta-band p { color: rgba(255,255,255,0.85); font-size: 1.08rem; margin: 0 auto 1.6rem; max-width: 34rem; }
+.cta-band .btn-light { background: #fff; color: var(--accent-text); border: 0; font-weight: 700; padding: 0.75rem 1.6rem; }
+.cta-band .btn-light:hover { background: #f1f5f9; transform: translateY(-1px); }
+.cta-band::before { content: ""; position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+    background-size: 38px 38px; -webkit-mask-image: radial-gradient(70% 120% at 50% 0%, #000, transparent 70%);
+            mask-image: radial-gradient(70% 120% at 50% 0%, #000, transparent 70%); }
+.cta-band > * { position: relative; z-index: 1; }
+
+/* ---- Landing responsive -------------------------------------------------- */
+@media (max-width: 860px) {
+    .landing-hero { padding: 3.5rem 1.25rem 3rem; }
+    .hero-mock { max-width: 100%; margin-top: 3rem; }
+    .steps, .feature-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal { animation: none; opacity: 1; }
+    .browser-frame, .mini-row.is-crit { animation: none; }
+}
+
+/* ---- Filter bar (list views) --------------------------------------------- */
+.filter-bar {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+}
+.filter-bar .form-label { margin-bottom: 0.25rem; }
+.filter-bar .form-select-sm {
+    min-width: 150px;
+    padding: 0.4rem 2rem 0.4rem 0.7rem;
+    font-size: 0.9rem;
+    border-radius: var(--radius);
+}
+.filter-bar .filter-clear { align-self: flex-end; }
+
+/* ============================================================================
+   DARK THEME — only the token values change; every component re-skins itself
+   because the whole UI reads these variables. Scoped to the signed-in app
+   (the marketing layout doesn't set data-bs-theme). Bootstrap's own components
+   also follow because we set data-bs-theme="dark" on <html>.
+   ========================================================================== */
+[data-bs-theme="dark"] {
+    --bg:            #161f31;   /* panels / cards (lighter than the page) */
+    --bg-tint:       #1e293b;   /* sidebar / inputs / hover / subtle panels */
+    --bg-page:       #0b1220;   /* page background (darkest) */
+    --surface-blur:  var(--bg);   /* opaque topbar (dark) */
+
+    --text:          #e2e8f0;   /* primary text (slate-200) */
+    --text-muted:    #94a3b8;   /* secondary (slate-400) */
+    --text-faint:    #64748b;   /* hints / timestamps (slate-500) */
+    --border:        #26334a;   /* hairline borders */
+    --border-strong: #3b4a63;
+
+    /* Indigo, lifted for contrast on dark */
+    --accent:        #6366f1;   /* indigo-500 */
+    --accent-hover:  #818cf8;   /* indigo-400 */
+    --accent-text:   #a5b4fc;   /* indigo-300 — readable accent text/links */
+    --accent-soft:   rgba(99, 102, 241, 0.18);
+    --accent-ring:   rgba(99, 102, 241, 0.32);
+    --accent-grid:   rgba(99, 102, 241, 0.18);
+
+    /* Status hues brightened so badges/text stay legible on dark */
+    --ok:     #22c55e;   --ok-soft:   rgba(34, 197, 94, 0.16);
+    --warn:   #f59e0b;   --warn-soft: rgba(245, 158, 11, 0.16);
+    --danger: #f87171;   --danger-soft: rgba(248, 113, 113, 0.16);
+    --neutral:#94a3b8;   --neutral-soft: rgba(148, 163, 184, 0.14);
+
+    /* Shadows go deeper on dark to keep elevation readable */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.40);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.40), 0 2px 6px -2px rgba(0, 0, 0, 0.50);
+    --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.45), 0 12px 28px -8px rgba(0, 0, 0, 0.55);
+    --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.65);
+}
+
+/* Theme toggle — show the icon/label for the action the click performs. */
+.theme-toggle { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; }
+.theme-toggle svg { width: 15px; height: 15px; flex: none; }
+/* Both labels are flex rows (icon + text); only the one for the current theme shows. */
+.theme-when-light, .theme-when-dark { align-items: center; gap: 0.4rem; }
+.theme-when-light { display: inline-flex; }
+.theme-when-dark  { display: none; }
+[data-bs-theme="dark"] .theme-when-light { display: none; }
+[data-bs-theme="dark"] .theme-when-dark  { display: inline-flex; }
+
+/* ============================================================================
+   LANDING (php-starter home) — the boilerplate's own marketing hero. Kept here
+   so views/home.php (which uses .eyebrow/.hero/.dot-grid/.feature-card) renders.
+   ========================================================================== */
+.eyebrow {
+    display: inline-block; font-family: var(--font-mono); font-size: 0.72rem;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted);
+    border: 1px solid var(--border); background: var(--bg);
+    padding: 0.32rem 0.65rem; border-radius: var(--radius-sm); margin-bottom: 1.1rem;
+}
+.eyebrow::before { content: "// "; }
+.feature-card { position: relative; }
+.feature-card::before {
+    content: ""; position: absolute; left: 1.5rem; top: 0;
+    width: 26px; height: 2px; background: var(--accent);
+}
+.hero { padding: 6rem 0 4rem; text-align: center; position: relative; }
+.hero > .container { position: relative; z-index: 1; }
+.hero h1 { font-size: clamp(2.6rem, 6vw, 4rem); line-height: 1.0; margin-bottom: 1.25rem; }
+.hero .lead { color: var(--text-muted); font-size: 1.16rem; max-width: 38rem; margin: 0 auto 2rem; }
+.dot-grid::after {
+    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5;
+    background-image: linear-gradient(var(--accent-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--accent-grid) 1px, transparent 1px);
+    background-size: 38px 38px;
+    -webkit-mask-image: radial-gradient(70% 60% at 50% 35%, #000, transparent 75%);
+            mask-image: radial-gradient(70% 60% at 50% 35%, #000, transparent 75%);
 }

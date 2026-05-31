@@ -228,8 +228,16 @@ class Auth
             'CreatedAt' => gmdate('Y-m-d H:i:s'),
         ]);
         $link = url('/verify?token=' . $token . '&email=' . urlencode($email));
+        $html = view('emails/action', [
+            'title'     => 'Verify your email',
+            'preheader' => 'Confirm your email address to finish signing up.',
+            'heading'   => 'Verify your email',
+            'intro'     => 'Confirm your email address to finish setting up your account. This link is valid for 24 hours.',
+            'ctaUrl'    => $link,
+            'ctaText'   => 'Verify email',
+        ], 'email');
         send_mail($email, 'Verify your email',
-            "Confirm your email address (valid 24 hours):\n\n{$link}\n");
+            "Confirm your email address (valid 24 hours):\n\n{$link}\n", $html);
     }
 
     /** Consume a verification token and mark the account verified. Returns bool. */
